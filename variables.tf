@@ -26,5 +26,19 @@ variable "project_owner" {
   type        = string
   description = "project owner"
   default     = "Aswathy"
+
 }
+
+variable "hosted_zone_name" {
+  type        = string
+  description = "domain name"
+  default     = "mydevopslearnings.online"
+}
+
+variable "hostname" {
+  type        = string
+  description = "domain name"
+  default     = "git"
+}
+
 

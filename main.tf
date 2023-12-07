@@ -66,7 +66,7 @@ resource "aws_security_group" "new_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
- ingress {
+  ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
@@ -74,7 +74,7 @@ resource "aws_security_group" "new_sg" {
   }
 
 
- egress {
+  egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -90,8 +90,8 @@ resource "aws_instance" "frontend-server" {
   instance_type          = var.instance_type
   key_name               = aws_key_pair.auth_key.key_name
   user_data              = file("setup.sh")
-  vpc_security_group_ids = [aws_security_group.new_sg.id,aws_security_group.frontend2.id]
-  
+  vpc_security_group_ids = [aws_security_group.new_sg.id, aws_security_group.frontend2.id]
+
 
   tags = {
     Name = "${var.project_name}-${var.project_env}-database-server"
@@ -99,7 +99,18 @@ resource "aws_instance" "frontend-server" {
 
 
 
- lifecycle {
+  lifecycle {
     create_before_destroy = true
+  }
 }
+
+
+
+resource "aws_route53_record" "frondend" {
+  zone_id = data.aws_route53_zone.public.zone_id
+  name    = "${var.hostname}.${var.hosted_zone_name}"
+  type    = "A"
+  ttl     = 60
+  records = [aws_instance.frontend-server.public_ip]
 }
+
