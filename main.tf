@@ -73,3 +73,24 @@ resource "aws_security_group" "new_sg" {
   }
 
 }
+
+
+
+resource "aws_instance" "frontend-server" {
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  key_name               = aws_key_pair.auth_key.key_name
+  user_data              = file("setup.sh")
+  vpc_security_group_ids = [aws_security_group.new_sg.id,aws_security_group.frontend2.id]
+  
+
+  tags = {
+    Name = "${var.project_name}-${var.project_env}-database-server"
+  }
+
+
+
+ lifecycle {
+    create_before_destroy = true
+}
+}
