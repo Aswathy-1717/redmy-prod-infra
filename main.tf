@@ -97,13 +97,10 @@ resource "aws_instance" "frontend-server" {
     Name = "${var.project_name}-${var.project_env}-database-server"
   }
 
-
-
   lifecycle {
     create_before_destroy = true
   }
 }
-
 
 
 resource "aws_route53_record" "frondend" {
