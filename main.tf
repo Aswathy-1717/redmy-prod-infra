@@ -108,6 +108,19 @@ resource "aws_route53_record" "frondend" {
   name    = "${var.hostname}.${var.hosted_zone_name}"
   type    = "A"
   ttl     = 60
-  records = [aws_instance.frontend-server.public_ip]
+  records = [aws_eip.frontend.public_ip]
 }
 
+
+
+
+resource "aws_eip" "frontend" {
+  instance = aws_instance.frontend-server.id
+  domain   = "vpc"
+    tags= {
+    Name = "${var.project_name}-${var.project_env}-frontend"
+    project = var.project_name
+    env = var.project_env
+    owner = var.project_owner
+}
+}
